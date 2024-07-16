@@ -32,11 +32,16 @@ export const Receiver = () => {
         pcRef.current = pc;
 
         pc.ontrack = (event) => {
+            console.log(`Received ${event.track.kind} track, enabled: ${event.track.enabled}`);
             console.log("Track received:", event.track);
             if (event.track.kind === 'video' && videoRef.current) {
                 videoRef.current.srcObject = new MediaStream([event.track]);
             } else if (event.track.kind === 'audio' && audioRef.current) {
-                audioRef.current.srcObject = new MediaStream([event.track]);
+                const audioElement = new Audio()
+                audioElement.srcObject = new MediaStream([event.track])
+                audioElement.play().catch(e=>console.error("error recieving",e))
+                // document.appendChild(audioElement)
+                // audioRef.current.srcObject = new MediaStream([event.track]);
             }
         };
 
